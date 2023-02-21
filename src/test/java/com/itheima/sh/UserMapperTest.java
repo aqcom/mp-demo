@@ -1,6 +1,8 @@
 package com.itheima.sh;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.itheima.sh.mapper.UserMapper;
 import com.itheima.sh.pojo.User;
 import org.junit.jupiter.api.Test;
@@ -87,4 +89,25 @@ class UserMapperTest {
         List<User> users = userMapper.selectList(wrapper);
         System.out.println("users = " + users);
     }*/
+    @Test
+    public void testWrapper4() throws Exception{
+        // LambdaQueryWrapper<User> wrapper = new LambdaQueryWrapper<>();
+        LambdaQueryWrapper<User> wrapper = Wrappers.<User>lambdaQuery();
+
+        //        wrapper.like("user_name", "%伤%")
+        //                .eq("password","123456")
+        //                .ge("age", 28)
+        //                .between("age",29 , 39);  // 包含边界值
+
+        wrapper.like(User::getUser_name, "%伤%")
+                .eq(User::getPassword, "123456")
+                .ge(User::getAge, 28)
+                .between(User::getAge, 29, 39)
+                .orderByDesc(User::getAge)
+                .select(User::getId, User::getUser_name);
+
+
+        List<User> users = userMapper.selectList(wrapper);
+        System.out.println(users);
+    }
 }
